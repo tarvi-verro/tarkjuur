@@ -1,0 +1,9 @@
+
+Setup
+=====
+
+As root,
+
+	# modprobe usbserial
+	# echo deaf cafe > /sys/bus/usb-serial/drivers/generic/new_id
+
