@@ -1,3 +1,3 @@
 [submodule "frob"]
 	path = frob
-	url = git@github.com:tarvi-verro/fanrob-stm32.git
+	url = https://github.com/tarvi-verro/fanrob-stm32.git
