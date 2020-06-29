@@ -45,7 +45,7 @@ offset=0
 while true; do
 	sleep 5
 	result=$(curl -s -X POST  "https://api.telegram.org/$bot/getUpdates" \
-		-F"chat_id=$chat_id"  -F"offset=$offset")
+		-F"chat_id=$chat_id"  -F"offset=$offset" -F"timeout=60")
 	update_id=$(jq -r ".result[0].update_id" <<<"$result")
 
 	if [ "$update_id" == "null" ]; then
