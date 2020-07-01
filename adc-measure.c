@@ -178,11 +178,9 @@ void adc_update(int i)
 	if (!active_read)
 		return;
 
-	if (active_read == UPDATE_SLOW) {
-		if (i % 100 != 0)
-			return;
+	if (active_read == UPDATE_FAST) {
 		read_temperature();
-	} else {
+	} else if (i % 1000 == 0) { // about every 1.6s
 		read_temperature();
 	}
 }
