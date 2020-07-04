@@ -1,9 +1,84 @@
 
-Setup
-=====
+Hardware
+========
 
-As root,
+This is designed to work with the 3$ STM32F103 based small development board.
+You can find these in online stores under names such as:
+
+ * STM32F103C8T6 ARM STM32 Minimum System Development Board Module
+ * STM32F103C8T6 Small System Development Board Microcontroller
+
+You will also need the $3 ST-Link V2 debugger tool, look for listings such as:
+
+ * ST-Link V2 Programming Unit mini STM8 STM32 Emulator Downloader
+
+The project uses a capacitive soil mosture meter, you can find these under
+names such as:
+
+ * Tool V1.2 Corrosion Soil Resistant Moisture Sensor Analog Capacitive
+
+You will want to protect the sensor's little electronical components at the top
+of it. This can be achieved with epoxy glue or being _really_ careful when
+watering.
+
+
+Software Prerequisites
+======================
+
+The list of dependencies is as follows:
+
+ * arm-none-eabi-{gcc,gdb,newlib,binutils}, make: the compiler toolkit
+ * openocd: for flashing the binary
+ * moreutils, jq, bc, gnuplot, curl: used by the update-daemon.sh telegram bot
+
+
+Compiling and Flashing
+======================
+
+Making the binary should work rather easily:
+
+	make build/prg-f1.bin
+
+Next, we'll need to get this binary onto the microprocessor. So link up your
+STLinkV2 thing and fire up openocd:
+
+	openocd -f interface/stlink-v2.cfg -f target/stm32f1x.cfg -c 'gdb_flash_program enable'
+
+then open up gdb, connect, halt, flash and continue:
+
+	tar ext :3333
+	monitor halt
+	monitor flash write_image erase build/prg-f1.bin 0x08000000
+	c
+
+If everything was successful, you should be able to press the reset button on
+the board and the new program should load.
+
+
+Wiring
+======
+
+The analog out (AOUT) on the sensor should connect to the PA4 pin. Sensor's
+power supply (VCC) can be connected to any 3V3 pin on our stm32f1 development
+board, similarly the ground (GND) pin should be connected to a ground pin.
+
+
+USB Setup
+=========
+
+The microprosessor functionality can be accessed over USB. The USB acts as a
+serial device
+
+As this is a one-off project, it doesn't really have it own USB vendor and
+device ID-s. Thus we will need to tell Linux that it's just a simple serial
+device. As root:
 
 	# modprobe usbserial
 	# echo deaf cafe > /sys/bus/usb-serial/drivers/generic/new_id
+
+To test out the commands available, open up the serial device and print out the
+possible commands:
+
+	screen /dev/ttyUSB0
+	?
 
